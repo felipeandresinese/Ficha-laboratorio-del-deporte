@@ -1,4 +1,4 @@
-rt React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Printer, Plus, X, Loader2 } from "lucide-react";
 
 /* ============================================================================
@@ -104,6 +104,7 @@ export default function Planificaciones({ supabase, athlete }) {
   const [err, setErr] = useState(null);
 
   const loadActivePlan = useCallback(async () => {
+    if (!athlete || !athlete.id) return;
     setLoading(true);
     setErr(null);
     try {
@@ -167,11 +168,19 @@ export default function Planificaciones({ supabase, athlete }) {
     } finally {
       setLoading(false);
     }
-  }, [supabase, athlete.id]);
+  }, [supabase, athlete?.id]);
 
   useEffect(() => {
     loadActivePlan();
   }, [loadActivePlan]);
+
+  if (!athlete || !athlete.id) {
+    return (
+      <div style={{ padding: 24, textAlign: "center", fontSize: 13.5, color: MUTED, border: `1px dashed ${LINE_C}`, borderRadius: 12 }}>
+        Selecciona un deportista para ver o crear su planificación.
+      </div>
+    );
+  }
 
   const toggleQuality = (id) => {
     setSelectedQualities((prev) =>
@@ -603,4 +612,4 @@ const smallInputStyle = {
   background: "#fff",
   outline: "none",
   boxSizing: "border-box",
-};impo
+};
